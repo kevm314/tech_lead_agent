@@ -3,3 +3,5 @@ openai
 langchain[llms]
 sentence_transformers
 unstructured
+
+PyGithub
