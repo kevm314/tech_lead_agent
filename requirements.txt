@@ -2,7 +2,13 @@ chromadb
 openai
 langchain[llms]
 python-dotenv
+numexpr
 
 PyGithub
 sentence_transformers
 unstructured
+
+fastapi
+uvicorn[standard]
+
+GitPython

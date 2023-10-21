@@ -1,7 +1,6 @@
-# Load ELD from text file
 from GithubConnector import GithubConnector
 
-
+# Load ELD from text file
 def load_text_file(file_path):
     try:
         with open(file_path, 'r', encoding='utf-8') as file:
@@ -11,15 +10,14 @@ def load_text_file(file_path):
         return None
 
 
-# Load File information from Github
+# Load Github repos and vectorize
 # TODO
 
 # Load prompt guide
-
 prompt_guide = "You are a tech lead, you have access to multiple repos, given a feature request, your job is to go through the code files and create a list of tickets for a software engineer to work on"
 
 # Create tickets (as per prompt)
-
+tickets = ""
 
 # Ask if user is happy with prompt or would like to improve on them
 
@@ -30,19 +28,23 @@ def get_user_confirmation(template):
     user_response = input("Are you happy with this template? (yes/no): ").strip().lower()
     return user_response == 'yes'
 
-# Get user confirmation
-issue_template = ""
-is_confirmed = get_user_confirmation(issue_template)
+# Langchain Output parser to validate json.
 
-if is_confirmed:
-    print("User confirmed. Proceed to create the GitHub issue.")
-    github_connector = GithubConnector("", None)
+def func():
+    # Get user confirmation
+    issue_template = ""
+    is_confirmed = get_user_confirmation(issue_template)
 
-    for ticket in issue_templates:
-        github_connector.create_ticket_from_json(ticket)
+    if is_confirmed:
+        print("User confirmed. Proceed to create the GitHub issue.")
+        github_connector = GithubConnector("", None)
 
-else:
-    print("User not satisfied. Provide options to edit the template.")
+        for ticket in issue_templates:
+            github_connector.create_ticket_from_json(ticket)
+
+    else:
+        print("User not satisfied. Provide options to edit the template.")
 
 
-# If user is not happy, add feedback to prompt and rerun
+    # If user is not happy, add feedback to prompt and rerun
+
