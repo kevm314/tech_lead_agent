@@ -2,7 +2,9 @@ demo_app/
 tickets/
 .env
 test.env
-venv/
+.venv/
 .idea/
 demo_repos/
 __pycache__
+
+temp/
