@@ -5,9 +5,9 @@ from github import Auth
 
 
 class GithubConnector:
-    def __init__(self, github_access_token):
+    def __init__(self, github_access_token, repo='zhiduozhang/fastapi_demo_sxsw'):
         self.github_access_token = github_access_token
-        self.repo = 'zhiduozhang/fastapi_demo_sxsw'
+        self.repo = repo
 
     def create_sweep_ticket(self, title: str, description: str, tags: list):
         # using an access token
