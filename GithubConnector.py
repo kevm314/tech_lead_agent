@@ -9,6 +9,9 @@ class GithubConnector:
         self.github_access_token = github_access_token
         self.repo = repo
 
+    def create_ticket_from_json(self, json_dict: dict):
+        return self.create_sweep_ticket(json_dict['title'], json_dict['description'], json_dict['tags'])
+
     def create_sweep_ticket(self, title: str, description: str, tags: list):
         # using an access token
         auth = Auth.Token(self.github_access_token)
