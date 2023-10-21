@@ -1,6 +1,12 @@
+<<<<<<<<< Temporary merge branch 1
+venv/
+.idea/
+=========
 demo_app/
 tickets/
 .env
 test.env
 venv/
 .idea/
+demo_repos/
+__pycache__
