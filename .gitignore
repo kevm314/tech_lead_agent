@@ -1,2 +1,6 @@
+demo_app/
+tickets/
+.env
+test.env
 venv/
 .idea/
