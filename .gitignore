@@ -4,3 +4,5 @@ tickets/
 test.env
 venv/
 .idea/
+demo_repos/
+__pycache__
