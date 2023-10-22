@@ -1,4 +1,5 @@
 import os
+from typing import List
 
 from git import Repo
 from langchain.agents import load_tools, initialize_agent, AgentType
@@ -6,10 +7,11 @@ from langchain.chains import RetrievalQAWithSourcesChain
 from langchain.document_loaders import DirectoryLoader, TextLoader
 from langchain.embeddings import HuggingFaceBgeEmbeddings
 from langchain.llms.openai import OpenAI
-from langchain.text_splitter import CharacterTextSplitter
+from langchain.text_splitter import CharacterTextSplitter, Language, RecursiveCharacterTextSplitter
 from langchain.tools import Tool, StructuredTool
 from langchain.vectorstores.chroma import Chroma
 
+import RepoLoader
 from document_loaders.FileListLoader import FileListLoader
 from prompts import request_prompt_template
 from tools import create_ticket
@@ -38,11 +40,11 @@ class AgentSmith:
 
         self.tools = load_tools(["llm-math"], llm=self.llm)
 
-        #ticket_tool = StructuredTool.from_function(create_ticket)
+        ticket_tool = StructuredTool.from_function(create_ticket)
 
-        #self.tools.append(
-        #    ticket_tool
-        #)
+        self.tools.append(
+            ticket_tool
+        )
 
     def add_git_repo_as_vector_store(self, repo_name, local_dir=None):
         # repo_name = extract_repo_name(git_url)
@@ -62,17 +64,48 @@ class AgentSmith:
     def add_vector_store(self, repo_dir, repo_name):
         print(f"Adding Vector Directory: {repo_dir}")
 
-        files = list_files(repo_dir)
+        split_text: List[Document] = []
+        excluded_file_extensions = []
 
-        d_loader = FileListLoader(files,
-                                   show_progress=True, use_multithreading=False, loader_cls=TextLoader,
-                                   silent_errors=True)
+        for language in Language:
+            accepted_file_extensions = RepoLoader.code_map[language.value]
+            excluded_file_extensions += accepted_file_extensions
 
-        docs = d_loader.load()
+            files = list_files(repo_dir, include_extensions=accepted_file_extensions)
 
-        frontend_texts = self.text_splitter.split_documents(docs)
+            d_loader = FileListLoader(
+                files,
+                show_progress=True,
+                use_multithreading=False,
+                loader_cls=TextLoader,
+                silent_errors=True
+            )
 
-        doc_search = Chroma.from_documents(frontend_texts, self.embeddings, collection_name=repo_name.split('/')[0])
+            docs = d_loader.load()
+
+            text_splitter = RecursiveCharacterTextSplitter.from_language(
+                chunk_size=1000,
+                chunk_overlap=100,
+                language=language
+            )
+
+            texts = text_splitter.split_documents(docs)
+            split_text += texts
+
+        # Add non-code files
+
+        if False:
+            files = list_files(repo_dir, ignore_extensions=excluded_file_extensions)
+            d_loader = FileListLoader(files,
+                                       show_progress=True, use_multithreading=False, loader_cls=TextLoader,
+                                       silent_errors=True)
+
+            docs = d_loader.load()
+
+            frontend_texts = self.text_splitter.split_documents(docs)
+            split_text += frontend_texts
+
+        doc_search = Chroma.from_documents(split_text, self.embeddings, collection_name=repo_name.split('/')[0])
 
         self.doc_searches.append(doc_search)
 

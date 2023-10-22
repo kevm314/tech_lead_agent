@@ -20,32 +20,41 @@ generic_ignored_extensions = [
 ]
 
 
-def list_files(directory: str, ignore_extensions=None) -> List[Path]:
+def list_files(directory: str, ignore_extensions: Optional[List[str]] = None, include_extensions: Optional[List[str]] = None) -> List[Path]:
     """
     Lists all files in a specified directory and its subdirectories,
-    ignoring files with specified extensions.
+    ignoring files with specified extensions and/or including files with specified extensions.
 
     Parameters:
     directory (str): The directory to search.
     ignore_extensions (List[str], optional): A list of file extensions to ignore.
-        Defaults to generic list stored in this file
+        Defaults to generic list stored in this file.
+    include_extensions (List[str], optional): A list of file extensions to include.
+        If specified, only files with these extensions will be included.
 
     Returns:
     List[Path]: A list of Path objects representing the filtered files.
     """
     if ignore_extensions is None:
-        ignore_extensions = generic_ignored_extensions
+        ignore_extensions = generic_ignored_extensions  # Assume this is a predefined list
 
     # Convert extensions to lowercase for case-insensitive comparison
     ignore_extensions = [ext.lower() for ext in ignore_extensions]
+    if include_extensions:
+        include_extensions = [ext.lower() for ext in include_extensions]
+
     # Get a list of all files in the specified directory and its subdirectories
     all_files = Path(directory).rglob('*')
-    # Filter out the undesired file extensions
+
+    # Filter out the undesired file extensions and/or include desired extensions
     filtered_files = [
         f for f in all_files
         if f.is_file()
-        and f.suffix.lower() not in ignore_extensions
-        and '.git' not in f.parts
+        and ('.git' not in f.parts)
+        and (
+            (not include_extensions and f.suffix.lower() not in ignore_extensions) or
+            (include_extensions and f.suffix.lower() in include_extensions)
+        )
     ]
 
     return filtered_files
