@@ -1,7 +1,7 @@
 import json
 import os
 
-from GithubConnector import GithubConnector
+from src.GithubConnector import GithubConnector
 
 
 def create_ticket(title: str, description: str, affected_files=None, tags=None, repo_name: str = ""):
