@@ -33,7 +33,7 @@ def create_ticket(title: str, description: str, affected_files=None, tags=None, 
     ticket["description"] += " Files to edit: " + str(ticket["affected_files"])
     github_connector = GithubConnector(github_access_token=os.getenv("GITHUB_KEY"))
 
-    github_connector.create_ticket_from_json(ticket, repo_name=repo_name)
+    # github_connector.create_ticket_from_json(ticket, repo_name=repo_name)
 
     return f"Ticket saved to {filepath}"
 
