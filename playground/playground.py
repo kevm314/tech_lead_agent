@@ -1,4 +1,4 @@
-from GithubConnector import GithubConnector
+from src.GithubConnector import GithubConnector
 
 # Load ELD from text file
 def load_text_file(file_path):

@@ -13,7 +13,7 @@ from langchain.agents import load_tools
 from langchain.tools import StructuredTool
 
 
-load_dotenv(dotenv_path=pathlib.Path('.env'))
+load_dotenv(dotenv_path=pathlib.Path('../.env'))
 
 #llm = OpenAI(temperature=0) #gpt-3.5-turbo-16k # model_name="gpt-3.5-turbo"
 

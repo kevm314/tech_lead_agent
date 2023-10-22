@@ -4,7 +4,7 @@ from typing import List
 from git import Repo
 from langchain.agents import load_tools, initialize_agent, AgentType
 from langchain.chains import RetrievalQAWithSourcesChain
-from langchain.document_loaders import DirectoryLoader, TextLoader
+from langchain.document_loaders import TextLoader
 from langchain.embeddings import HuggingFaceBgeEmbeddings
 from langchain.llms.openai import OpenAI
 from langchain.text_splitter import CharacterTextSplitter, Language, RecursiveCharacterTextSplitter
@@ -13,7 +13,7 @@ from langchain.vectorstores.chroma import Chroma
 
 import RepoLoader
 from document_loaders.FileListLoader import FileListLoader
-from prompts import request_prompt_template
+from example_prompts.base_prompts import request_prompt_template
 from tools import create_ticket
 from utils import list_files
 

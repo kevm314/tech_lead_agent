@@ -7,7 +7,7 @@ from AgentSmith import AgentSmith
 from utils import extract_repo_name
 
 
-load_dotenv(dotenv_path=pathlib.Path('.env'))
+load_dotenv(dotenv_path=pathlib.Path('../.env'))
 
 
 def main():
